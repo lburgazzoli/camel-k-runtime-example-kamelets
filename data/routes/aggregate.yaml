@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 - from:
-    uri: aws-kinesis:{{stream}}
-    parameters:
-      secretKey: "{{secretKey}}"
-      accessKey: "{{accessKey}}"
-      region: "{{region}}"
+    uri: "kamelet:source"
     steps:
-      - marshal:
-          json: {}
-      - to: "kamelet:sink"
+      - aggregate:
+          correlation-expression:
+            simple: "${header.Kind}"
+          strategy-ref: "myAggregatorStrategy"
+          completion-size: "{{count}}"
+          steps:
+            - to: "log:aggregate"
+            - to: "kamelet:sink"

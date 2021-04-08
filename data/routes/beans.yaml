@@ -14,13 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-- from:
-    uri: "timer:tick"
-    steps:
-      - set-header:
-          name: "Kind"
-          constant: "simple"
-      - set-body:
-          simple: "${exchangeProperty.CamelTimerCounter}"
-      - to: "kamelet:aggregate?count=5"
-      - to: "log:info"
+- beans:
+    - name: myAggregatorStrategy
+      type: org.apache.camel.processor.aggregate.StringAggregationStrategy
+      properties:
+        delimiter: "|"
